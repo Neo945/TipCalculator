@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,7 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _counter = 0;
+  int _counter = 0;
   late final TextEditingController controller;
   @override
   void initState() {
@@ -38,12 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
-
-  void _incrementCounter(double value) {
-    setState(() {
-      _counter = value;
-    });
   }
 
   @override
@@ -63,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
+                  prefix: Text('\$  '),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -81,15 +77,60 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Slider(
                 onChanged: (double value) {
-                  _incrementCounter(value);
+                  setState(() {
+                    _counter = value.round();
+                  });
                 },
-                value: _counter,
+                value: _counter.toDouble(),
+                min: 0,
+                max: 10,
+                label: '$_counter',
+                divisions: 10,
               ),
-              ElevatedButton(onPressed: () {}, child: Text('Enter')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SecondPage(
+                        amount: (_counter * int.parse(controller.text) / 100),
+                      ),
+                    ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(10),
+                  ),
+                  child: Text('Calculate')),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class SecondPage extends StatefulWidget {
+  const SecondPage({Key? key, required this.amount}) : super(key: key);
+
+  final double amount;
+
+  @override
+  _SecondPageState createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Center(
+          child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Text('${widget.amount}')],
+        ),
+      )),
     );
   }
 }
