@@ -12,7 +12,10 @@
 
     git clone https://github.com/Neo945/TipCalculator.git
 
+> **_NOTE:_** Don't forget to set your AVD
 ## For setting up the envoirnment
 
     cd TipCalculator
     flutter run
+
+**Or** you can directly open the project using Visual Studio Code or Android Studio
