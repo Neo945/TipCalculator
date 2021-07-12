@@ -12,7 +12,7 @@
 
     git clone https://github.com/Neo945/TipCalculator.git
 
-> **_NOTE:_** Don't forget to set your AVD
+> **_NOTE:_** Don't forget to start your AVD
 ## For setting up the envoirnment
 
     cd TipCalculator
