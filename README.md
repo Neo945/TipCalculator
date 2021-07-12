@@ -8,7 +8,7 @@
 | <img src="./" alt="Quiz">|<img src="./" alt="Output">  |
 <p>&nbsp;</p>
 
-# For downloading the project
+## For downloading the project
 
     git clone https://github.com/Neo945/TipCalculator.git
 
