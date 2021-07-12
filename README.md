@@ -1,16 +1,18 @@
-# tipcalculator
+# Mad_Quiz
+### A simple flutter application for calculating Tip based on amount input
+<p>&nbsp;</p>
 
-A new Flutter project.
+# Screenshots
+| Input  | Output |
+| :------------: |:---------------:|
+| <img src="./" alt="Quiz">|<img src="./" alt="Output">  |
+<p>&nbsp;</p>
 
-## Getting Started
+# For Installation
 
-This project is a starting point for a Flutter application.
+    git clone https://github.com/Neo945/TipCalculator.git
 
-A few resources to get you started if this is your first Flutter project:
+## For running the Dart version
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    cd TipCalculator
+    flutter run
