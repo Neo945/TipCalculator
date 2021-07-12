@@ -27,8 +27,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var currency = {"USD": "\$"};
   int _counter = 0;
   bool _valid = true;
+  String _curr = 'USD';
   late final TextEditingController controller;
   @override
   void initState() {
@@ -62,40 +64,67 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(
                   height: 100,
                 ),
-                TextField(
-                  onChanged: (var s) {
-                    setState(() {
-                      this._valid = true;
-                    });
-                  },
-                  controller: controller,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: InputDecoration(
-                    errorText: (!_valid) ? 'Please enter the amount' : null,
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
+                Row(children: <Widget>[
+                  Flexible(
+                    flex: 3,
+                    child: DropdownButton<String>(
+                      value: currency.keys.toList()[0],
+                      onChanged: (String? s) {
+                        setState(() {
+                          this._curr = s!;
+                        });
+                      },
+                      items: currency.keys
+                          .toList()
+                          .map<DropdownMenuItem<String>>(
+                              (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                          .toList(),
                     ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                    prefix: Text('\$  '),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 8,
-                    ),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
-                    labelText: 'Enter the Amount',
                   ),
-                ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Flexible(
+                    flex: 10,
+                    child: TextField(
+                      onChanged: (var s) {
+                        setState(() {
+                          this._valid = true;
+                        });
+                      },
+                      controller: controller,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                        errorText: (!_valid) ? 'Please enter the amount' : null,
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        prefix: Text('${currency[this._curr]}  '),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 8,
+                        ),
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        labelText: 'Enter the Amount',
+                      ),
+                    ),
+                  )
+                ]),
                 SizedBox(
                   height: 20,
                 ),
@@ -112,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   divisions: 10,
                 ),
                 SizedBox(
-                  height: 150,
+                  height: 100,
                 ),
                 ElevatedButton(
                     onPressed: () {
@@ -124,6 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       }
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SecondPage(
+                          curr: currency[this._curr]!,
+                          total: double.parse(controller.text),
                           amount: (_counter * int.parse(controller.text) / 100),
                         ),
                       ));
@@ -142,9 +173,13 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class SecondPage extends StatefulWidget {
-  const SecondPage({Key? key, required this.amount}) : super(key: key);
+  const SecondPage(
+      {Key? key, required this.amount, required this.total, required this.curr})
+      : super(key: key);
 
   final double amount;
+  final String curr;
+  final double total;
 
   @override
   _SecondPageState createState() => _SecondPageState();
@@ -162,7 +197,19 @@ class _SecondPageState extends State<SecondPage> {
           child: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('${widget.amount}')],
+          children: [
+            Text(
+              'Total: ${widget.curr} ${widget.total}',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Tip: ${widget.curr} ${widget.amount}',
+              style: TextStyle(fontSize: 20),
+            )
+          ],
         ),
       )),
     );
