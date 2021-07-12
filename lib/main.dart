@@ -28,6 +28,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  bool _valid = true;
   late final TextEditingController controller;
   @override
   void initState() {
@@ -44,62 +45,95 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              TextField(
-                controller: controller,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: InputDecoration(
-                  prefix: Text('\$  '),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 8,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  labelText: 'Enter the Amount',
+        child: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                SizedBox(
+                  height: 100,
                 ),
-              ),
-              Slider(
-                onChanged: (double value) {
-                  setState(() {
-                    _counter = value.round();
-                  });
-                },
-                value: _counter.toDouble(),
-                min: 0,
-                max: 10,
-                label: '$_counter',
-                divisions: 10,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SecondPage(
-                        amount: (_counter * int.parse(controller.text) / 100),
-                      ),
-                    ));
+                Text(
+                  'TipMe',
+                  style: TextStyle(fontSize: 100),
+                ),
+                SizedBox(
+                  height: 100,
+                ),
+                TextField(
+                  onChanged: (var s) {
+                    setState(() {
+                      this._valid = true;
+                    });
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(10),
+                  controller: controller,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    errorText: (!_valid) ? 'Please enter the amount' : null,
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                    prefix: Text('\$  '),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 8,
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    labelText: 'Enter the Amount',
                   ),
-                  child: Text('Calculate')),
-            ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Slider(
+                  onChanged: (double value) {
+                    setState(() {
+                      _counter = value.round();
+                    });
+                  },
+                  value: _counter.toDouble(),
+                  min: 0,
+                  max: 10,
+                  label: '$_counter',
+                  divisions: 10,
+                ),
+                SizedBox(
+                  height: 150,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      if (controller.text == '') {
+                        setState(() {
+                          this._valid = false;
+                        });
+                        return;
+                      }
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SecondPage(
+                          amount: (_counter * int.parse(controller.text) / 100),
+                        ),
+                      ));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    child: Text('Calculate')),
+              ],
+            ),
           ),
         ),
       ),
