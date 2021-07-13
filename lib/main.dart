@@ -26,20 +26,31 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
+  late final Animation<Color?> _animation;
   var currency = {"USD": "\$"};
-  int _counter = 0;
+  int _counter = 1;
   bool _valid = true;
   String _curr = 'USD';
   late final TextEditingController controller;
   @override
   void initState() {
+    _animation =
+        ColorTween(begin: Colors.red, end: Colors.blue).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.linear,
+    ));
     controller = TextEditingController();
     super.initState();
+    _animationController.repeat(reverse: true);
   }
 
   @override
   void dispose() {
+    _animationController.dispose();
     controller.dispose();
     super.dispose();
   }
@@ -57,74 +68,87 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(
                   height: 100,
                 ),
-                Text(
-                  'TipMe',
-                  style: TextStyle(fontSize: 100),
-                ),
+                ValueListenableBuilder<Color?>(
+                    valueListenable: _animation,
+                    builder: (context, value, child) {
+                      return Text(
+                        'TipMe',
+                        style: TextStyle(fontSize: 100, color: value),
+                      );
+                    }),
+                // Text(
+                //   'TipMe',
+                //   style: TextStyle(fontSize: 100),
+                // ),
                 SizedBox(
                   height: 100,
                 ),
-                Row(children: <Widget>[
-                  Flexible(
-                    flex: 3,
-                    child: DropdownButton<String>(
-                      value: currency.keys.toList()[0],
-                      onChanged: (String? s) {
-                        setState(() {
-                          this._curr = s!;
-                        });
-                      },
-                      items: currency.keys
-                          .toList()
-                          .map<DropdownMenuItem<String>>(
-                              (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e),
-                                  ))
-                          .toList(),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Flexible(
-                    flex: 10,
-                    child: TextField(
-                      onChanged: (var s) {
-                        setState(() {
-                          this._valid = true;
-                        });
-                      },
-                      controller: controller,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(
-                        errorText: (!_valid) ? 'Please enter the amount' : null,
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                        ),
-                        prefix: Text('${currency[this._curr]}  '),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 8,
-                        ),
-                        labelStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
-                        labelText: 'Enter the Amount',
+                Row(
+                  children: <Widget>[
+                    Flexible(
+                      flex: 3,
+                      child: DropdownButton<String>(
+                        value: currency.keys.toList()[0],
+                        onChanged: (String? s) {
+                          setState(() {
+                            this._curr = s!;
+                          });
+                        },
+                        items: currency.keys
+                            .toList()
+                            .map<DropdownMenuItem<String>>(
+                                (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e),
+                                    ))
+                            .toList(),
                       ),
                     ),
-                  )
-                ]),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Flexible(
+                      flex: 10,
+                      child: TextField(
+                        onChanged: (var s) {
+                          setState(() {
+                            this._valid = true;
+                          });
+                        },
+                        controller: controller,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: InputDecoration(
+                          errorText:
+                              (!_valid) ? 'Please enter the amount' : null,
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                          prefix: Text('${currency[this._curr]}  '),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 8,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelText: 'Enter the Amount',
+                        ),
+                      ),
+                    )
+                  ],
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -185,7 +209,28 @@ class SecondPage extends StatefulWidget {
   _SecondPageState createState() => _SecondPageState();
 }
 
-class _SecondPageState extends State<SecondPage> {
+class _SecondPageState extends State<SecondPage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controllerAmm =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 1500));
+
+  late final Animation<int?> _animationAmm;
+
+  void initState() {
+    _animationAmm = IntTween(begin: 0, end: 100).animate(CurvedAnimation(
+      parent: _controllerAmm,
+      curve: Curves.linear,
+    ));
+    super.initState();
+    _controllerAmm.forward();
+  }
+
+  @override
+  void dispose() {
+    _controllerAmm.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,17 +243,38 @@ class _SecondPageState extends State<SecondPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Total: ${widget.curr} ${widget.total}',
-              style: TextStyle(fontSize: 20),
-            ),
+            ValueListenableBuilder<int?>(
+                valueListenable: _animationAmm,
+                builder: (context, value, child) {
+                  return Text(
+                    'Total: ${widget.curr} ${widget.total}',
+                    style: TextStyle(
+                      fontSize: 30,
+                      color:
+                          Colors.white.withOpacity((value!.toDouble() / 100)),
+                    ),
+                  );
+                }),
             SizedBox(
               height: 20,
             ),
-            Text(
-              'Tip: ${widget.curr} ${widget.amount}',
-              style: TextStyle(fontSize: 20),
-            )
+            ValueListenableBuilder<int?>(
+                valueListenable: _animationAmm,
+                builder: (context, value, child) {
+                  return Text(
+                    'Total: ${widget.curr} ${widget.amount}',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color:
+                          Colors.white.withOpacity((value!.toDouble() / 100)),
+                    ),
+                  );
+                }),
+            // Text(
+            //   'Tip: ${widget.curr} ${widget.amount}',
+            //   style: TextStyle(fontSize: 20),
+            // )
           ],
         ),
       )),
