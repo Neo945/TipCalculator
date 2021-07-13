@@ -5,7 +5,7 @@
 # Screenshots
 | Input  | Output |
 | :------------: |:---------------:|
-| <img src="./" alt="Quiz">|<img src="./" alt="Output">  |
+| <img src="./images/input.png" alt="Quiz">|<img src="./images/output.png" alt="Output">  |
 <p>&nbsp;</p>
 
 ## For downloading the project
