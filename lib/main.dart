@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage>
   late final AnimationController _animationController =
       AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
   late final Animation<Color?> _animation;
-  var currency = {"USD": "\$"};
+  var currency = {"USD": "\$", "INR": "₹", "JPY": "¥", "EUR": "€", "EGP": "£"};
   int _counter = 1;
   bool _valid = true;
   String _curr = 'USD';
